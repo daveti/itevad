@@ -1,0 +1,51 @@
+;
+; Itevad Protocol Text Encoding ABNF Example
+; April 6, 2012
+; http://daveti.blog.com
+;
+
+itevadMessage		= LWSP message
+message			= ItevadToken SLASH Version SEP ip4Address SEP messageBody
+messsageBody		= (messageRequest / messageReply)
+messageRequest		= TransToken EQUAL TransactionID LBRKT askContent RBRKT
+messageReply		= ReplyToken EQUAL TransactionId LBRKT answerContent RBRKT
+askContent		= AskToken EQUAL quotedString
+answerContent		= AnswerToken EQUAL quotedString
+Version			= 1*2(DIGIT)	; "0".."99"
+ip4Address		= address [":" portNumber]
+address			= "[" IPv4address "]"
+IPv4address		= V4hex DOT V4hex DOT V4hex DOT V4hex
+V4hex			= 1*3(DIGIT)	; "0".."255"
+TransactionId		= UINT32
+portNumber		= UINT16
+
+UINT16			= 1*5(DIGIT)	; %x0-FFFF
+UINT32			= 1*10(DIGIT)	; %x0-FFFFFFFF
+DIGIT			= %x30-39	; 0-9
+DOT			= "."
+DQUOTE			= 0x22		; "
+ALPHA			= %x41-5A / %x61-7A	; A-Z / a-z
+SafeChar		= DIGIT / ALPHA / "+" / "-" / "&" / "!" / "_" / "/" / "'" / "?" / "@" /
+			  "^" / "`" / "~" / "*" / "$" / "\" / "(" / ")" / "%" / "|" / "."
+RestChar		= ";" / "[" / "]" / "{" / "}" / ":" / "," / "#" / "<" / ">" / "="
+CR			= %x0D		; Carriage return
+LF			= %x0A		; linefeed
+SP			= %x20		; space
+HTAB			= %x09		; horizontal tab
+COLON			= ":"		; colon
+WSP			= SP / HTAB	; white space
+COMMENT			= ";" *(SafeChar / RestChar / WSP / %x22) EOL
+EOL			= (CR [LF] / LF)
+LWSP			= *(WSP / COMMENT / EOL)
+SLASH			= "/"
+SEP			= (WSP / EOL / COMMENT) LWSP
+EQUAL			= "="
+LBRKT			= LWSP "{" LWSP
+RBRKT			= LWSP "}" LWSP
+quotedString		= DQUOTE *(SafeChar / EOL / %x80-FF / RestChar / WSP) DQUOTE
+
+ItevadToken		= "Itevad"
+TransToken		= "Transaction"
+ReplyToken		= "Reply"
+AskToken		= "Ask"
+AnswerToken		= "Answer"

@@ -1,0 +1,52 @@
+/*
+ * Itevad - an example protocol
+ * which is used to do nothing or nothing
+ * Name: itevad.asn1
+ * dave.tian@alcatel-lucent.com
+ * Jan 6, 2011
+ * http://daveti.blog.com
+ */
+
+ITEVAD DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+ItevadMessage ::= SEQUENCE
+{
+	version		Version,
+	ip4Address	IP4Address,
+	messageBody	MessageBody
+}
+
+Version ::= INTEGER(0..99)
+
+IP4Address ::= SEQUENCE
+{
+	address		OCTET STRING (SIZE(4)),
+	portNumber	INTEGER(0..65536) OPTIONAL
+}
+
+MessageBody ::= CHOICE
+{
+	messageRequest	MessageRequest,
+	messageReply	MessageReply
+}
+
+MessageRequest ::= SEQUENCE
+{
+	transactionId	TransactionId,
+	askContent	AskContent
+}
+
+MessageReply ::= SEQUENCE
+{
+	transactionId	TransactionId,
+	answerContent	AnswerContent
+}
+
+TransactionId ::= INTEGER(0..4294967295)	-- 32-bit unsigned integer, 0xffffffff
+
+AskContent ::= IA5String(SIZE(1..1000))
+
+AnswerContent ::= IA5String(SIZE(1..1000))
+
+END

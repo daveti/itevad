@@ -1,0 +1,9 @@
+Itevad/1 [31.31.31.31]:7777
+Transaction = 1 {
+	Ask = "who r you?"
+}
+
+Itevad/2 [11.11.11.11]:6666
+Reply = 1 {
+	Answer = "i am itevad"
+}
